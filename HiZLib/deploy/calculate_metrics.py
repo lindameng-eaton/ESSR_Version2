@@ -1,15 +1,24 @@
 import numpy as np
 from ..utility import *
+import numpy.typing as npt
 
 
-def pearson_corr(x1, x2):
+def pearson_corr(x1: npt.ArrayLike, x2: npt.ArrayLike, NoiseLevel: float = 1e-9) -> float:
     """return correlationcoefficient of x1 and x2
         input:
             x1, x2: signal vectors
         output:
             scalor: correlation coefficiente
     """
-    return np.abs(np.corrcoef(x1, x2)[0, 1])
+    
+    if not isinstance(x1, np.ndarray):
+        x1 = np.array(x1)
+    if not isinstance(x2, np.ndarray):
+        x2 = np.array(x2)
+
+    corr_x = np.abs(np.corrcoef(x1, x2)[0, 1]) if (max(x1)>NoiseLevel)&(max(x2)>NoiseLevel) else 1
+
+    return corr_x
 
 
 def calculate_FFtCorr(dt1, dt2, fs, fmin=None, fmax=None):
